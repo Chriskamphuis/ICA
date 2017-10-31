@@ -3,10 +3,13 @@ import numpy as np
 class fastICA:
     """
         Class for the fast Independent Component Analysis algorithm.
+        Inspired by:
+        * https://www.cs.helsinki.fi/u/ahyvarin/papers/TNN99new.pdf
+        * https://www.cs.helsinki.fi/u/ahyvarin/papers/NN00new.pdf
 
         Args:
             general (bool): true if algorithm needs to be general, false if the algorithm needs to be robust. Regulates
-                which function are being used for determining non gaussianity. Described in:
+                which functions are being used for determining non gaussianity. Described in:
                 https://www.cs.helsinki.fi/u/ahyvarin/papers/NN00new.pdf
 
         Attributes:
