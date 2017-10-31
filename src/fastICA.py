@@ -29,16 +29,6 @@ class fastICA:
             self._g = lambda x: x*np.power(np.e, -np.divide(np.power(x, 2), 2))
             self._dg = lambda x: (1-x*x)*np.power(np.e, -np.divide(np.power(x, 2), 2))
 
-
-    def _centre_data(self, X):
-        """
-        Centre the data such that all rows in X have an expected value of 0. Used for whitening the data.
-
-        Keyword arguments:
-        X -- ndarray of shape (N, M)
-        """
-        return X - X.mean(axis=1, keepdims=True)
-
     def _whitening(self, X):
         """
         Apply whitening on input data. The data needs to be whitened before components can be extracted.
@@ -46,9 +36,9 @@ class fastICA:
         Keyword arguments:
         X -- ndarray of shape (N, M)
         """
-        X = self._centre_data(X)
-        w, v = np.linalg.eig(np.cov(X))
-        return np.matmul(np.matmul(np.matmul(v, lin.sqrtm(np.diag(w))), v.T), X)
+        X -= X.mean(axis=1, keepdims=True)  # Centre the data
+        w, v = np.linalg.eig(np.cov(X))  # Calculate eigenvalues and vectors
+        return np.matmul(np.matmul(np.matmul(v, lin.sqrtm(np.diag(w))), v.T), X)  # Return the whitened matrix
 
     def single_component_extraction(self, X):
         """
