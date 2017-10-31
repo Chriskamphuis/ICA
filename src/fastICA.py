@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.linalg as lin
 
 class fastICA:
     """
@@ -29,20 +30,44 @@ class fastICA:
             self._dg = lambda x: (1-x*x)*np.power(np.e, -np.divide(np.power(x, 2), 2))
 
 
-    def _whitening(X):
+    def _centre_data(self, X):
         """
-        Apply whitening on input data.
+        Centre the data such that all rows in X have an expected value of 0. Used for whitening the data.
 
         Keyword arguments:
         X -- ndarray of shape (N, M)
         """
-        raise NotImplementedError
+        return X - X.mean(axis=1, keepdims=True)
 
-    def single_component_extraction(X):
+    def _whitening(self, X):
+        """
+        Apply whitening on input data. The data needs to be whitened before components can be extracted.
+
+        Keyword arguments:
+        X -- ndarray of shape (N, M)
+        """
+        X = self._centre_data(X)
+        w, v = np.linalg.eig(np.cov(X))
+        return np.matmul(np.matmul(np.matmul(v, lin.sqrtm(np.diag(w))), v.T), X)
+
+    def single_component_extraction(self, X):
         """
         Calculate a single component from input data
 
         Keyword arguments:
         X -- ndarray of shape (N, M)
         """
+        raise NotImplementedError
+
+    def multiple_component_extraction(self, X, c):
+        """
+        Calculate a single component from input data
+
+        Keyword arguments:
+        X -- ndarray of shape (N, M)
+        c -- number of desired components, c <= N.
+        """
+        if c > X.shape[0]:
+            raise AssertionError('C needs to be smaller or equal to N.')
+
         raise NotImplementedError
